@@ -1,3 +1,107 @@
+This kernel is for jfltexx-lineage-OS-18.1 which has been modified but
+still has original config for build, Build Instructions are given below,
+or you can use the official Linux Kernel 3.x release build instruction
+## Environment consideration
+
+Everything can be made directly on the smartphone (via terminal or adb) but it is more complicated and extremely slow.
+All the following work is done with Ubuntu 18.04 LTS (the latest Ubuntu LTS at this moment) running on VirtualBox 6. The machine has:
+ * 24Gb of RAM
+ * 6 vCPU
+ * 300Gb of solid state disk (but can be less)
+ * a network connection
+
+## Build the custom kernel
+
+### Finding kernel sources
+In order to port Kali NetHunter on LineageOS (hereinafter also referred to as "LOS" or "LOS 16") we need the LOS kernel for the jflte. Fortunately, LOS is open source and the source code is hosted on GitHub. So we can clone the **android_kernel_samsung_jf** kernel repo that is the one used for the Samsung Galaxy S4 (GT-I9505 or jflte o jfltexx). 
+```bash
+git clone -b lineage-16.0 https://github.com/LineageOS/android_kernel_samsung_jf.git
+```
+Where `-b lineage-16.0` assures us the correct version (the correct branch in git speaking) of LOS, the 16.
+> The Samsung Galaxy S4 (GT-I9505 jflte) kernel is fortunately based on the old linux kernel 3.4 that is supported by Kali NetHunter, read the *Kernel Version* section [here](https://gitlab.com/kalilinux/nethunter/build-scripts/kali-nethunter-project/wikis/Porting-Nethunter).
+
+### Choosing the compiler/toolchain
+The Samsung Galaxy S4 has an ARM architecure, a 32bit architecture NOT a 64bit (NOT ARM64). In order to compile the new kernel from the x86 architecture we need a cross-compiler, a toolchain. We choose the Google one. I've successfully compile the sources above with the armeabi 4.7 and 4.8.
+```bash
+git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 toolchain
+```
+This command save the compiler in the `toolchain` folder
+
+### Set-up the environment
+As described above we need to cross-compile. To do this we need to set-up some variables:
+```bash
+export ARCH=arm
+export SUBARCH=arm
+export CROSS_COMPILE=$(pwd)/toolchain/bin/arm-eabi-
+```
+You can view this variables with `export -p`.
+
+## Configure the kernel
+To start the testual menu based on the config for the european version run this:
+```bash
+cd android_kernel_samsung_jf
+mkdir -p ../kernel # the output directory
+make O=../kernel clean # as a precaution
+make O=../kernel ARCH=arm VARIANT_DEFCONFIG=jf_eur_defconfig lineage_jf_defconfig menuconfig
+Where:
+ * The `ARCH=arm` argument is optional if we have set-up the enviroment.
+ * The `VARIANT_DEFCONFIG=jf_eur_defconfig` is specific for the EU version of the Samsung S4
+ * The `lineage_jf_defconfig` is the config base for LOS
+ * The `manuconfig` start the graphical configurator
+When you have finished the work, save the config to `.config`.
+
+This will create the default .config file for variant jf_eur_defconfig
+
+### Build the new kernel
+The last step: building the kernel!
+
+There are two little thing to consider: some warning suppression and the kernel name.
+
+#### Warning suppression
+The source code have some implicit function declarations that trigger the compiler with some warning. In order to avoid this warning, edit the `Makefile` and comment out or remove the following line:
+```bash
+cd android_kernel_samsung_jf
+nano Makefile
+-Werror-implicit-function-declaration \
+```
+
+
+#### Kernel name
+The string that represent the kernel name (e.g. "Linux Name 3.4.112-gb6ef1a5f759-dirty #4 SMP PREEMPT Mon Sep 30 22:44:34 CEST 2022 armv7l") is generated automatically, based on some enviromental variables and must be *unique*. In particular, the alphanumeric string followed by ***-dirty*** is based on the git status of our repository.
+
+To edit this string and avoid the ***-dirty*** we need to commit our changes:
+```bash
+git add -A
+git commit -m "New Kernel"
+```
+
+### Compiling!
+Finally, the compiling step!
+```bash
+cd android_kernel_samsung_jf
+make O=../kernel ARCH=arm -j$(nproc --all) LOCALVERSION="-OnkuV"
+```
+Where `-j` define the numer of thread to use. the `$(nproc --all)` print the number of processing units available on the machine.
+
+After few minute (depends on your CPU) the shell return and we can see:
+```bash
+  Kernel: arch/arm/boot/zImage is ready
+  ```
+ Our new custom kernel for LineageOS 18.1 is stored in ***kernel/arch/arm/boot/zImage*** and can be flashed on our Samsung Galaxy S4 (GT-I9505 jflte).
+ Now, because from all system-on-chip (SoC) kernel must support loadable kernel modules and we have some loadable module and we have compile the kernel with `CONFIG_MODULES=y` parameter, we also need to compile it.
+```bash
+cd android_kernel_samsung_jf
+make O=../kernel INSTALL_MOD_PATH="." INSTALL_MOD_STRIP=1 modules_install
+```
+If everything goes well, we have to remove some unusefull symlink.
+```bash
+rm ../kernel/lib/modules/$(ls ../kernel/lib/modules)/build
+rm ../kernel/lib/modules/$(ls ../kernel/lib/modules)/source
+```
+Our modules are in `../kernel/lib/modules`.
+
+
+
 	Linux kernel release 3.x <http://kernel.org/>
 
 These are the release notes for Linux version 3.  Read them carefully,
