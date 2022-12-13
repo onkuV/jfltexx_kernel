@@ -15,9 +15,9 @@ All the following work is done with Ubuntu 18.04 LTS (the latest Ubuntu LTS at t
 ### Finding kernel sources
 In order to port Kali NetHunter on LineageOS (hereinafter also referred to as "LOS" or "LOS 16") we need the LOS kernel for the jflte. Fortunately, LOS is open source and the source code is hosted on GitHub. So we can clone the **android_kernel_samsung_jf** kernel repo that is the one used for the Samsung Galaxy S4 (GT-I9505 or jflte o jfltexx). 
 ```bash
-git clone -b lineage-16.0 https://github.com/LineageOS/android_kernel_samsung_jf.git
+git clone -b lineage-18.1 https://github.com/LineageOS/android_kernel_samsung_jf.git
 ```
-Where `-b lineage-16.0` assures us the correct version (the correct branch in git speaking) of LOS, the 16.
+Where `-b lineage-18.1` assures us the correct version (the correct branch in git speaking) of LOS, the 18.1.
 > The Samsung Galaxy S4 (GT-I9505 jflte) kernel is fortunately based on the old linux kernel 3.4 that is supported by Kali NetHunter, read the *Kernel Version* section [here](https://gitlab.com/kalilinux/nethunter/build-scripts/kali-nethunter-project/wikis/Porting-Nethunter).
 
 ### Choosing the compiler/toolchain
