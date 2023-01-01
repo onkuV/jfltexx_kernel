@@ -42,11 +42,11 @@ To start the testual menu based on the config for the european version run this:
 cd android_kernel_samsung_jf
 mkdir -p ../kernel # the output directory
 make O=../kernel clean # as a precaution
-make O=../kernel ARCH=arm VARIANT_DEFCONFIG=jf_eur_defconfig lineage_jf_defconfig menuconfig
+make O=../kernel ARCH=arm VARIANT_DEFCONFIG=jf_eur_defconfig lineageos_jf_defconfig menuconfig
 Where:
  * The `ARCH=arm` argument is optional if we have set-up the enviroment.
  * The `VARIANT_DEFCONFIG=jf_eur_defconfig` is specific for the EU version of the Samsung S4
- * The `lineage_jf_defconfig` is the config base for LOS
+ * The `lineageos_jf_defconfig` is the config base for LOS
  * The `manuconfig` start the graphical configurator
 When you have finished the work, save the config to `.config`.
 
