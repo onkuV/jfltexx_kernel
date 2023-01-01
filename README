@@ -25,6 +25,10 @@ The Samsung Galaxy S4 has an ARM architecure, a 32bit architecture NOT a 64bit (
 ```bash
 git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 toolchain
 ```
+or if that doesnt work, use this
+```bash
+git clone https://github.com/DevSH01/arm-linux-androideabi-4.8 toolchain
+```
 This command save the compiler in the `toolchain` folder
 
 ### Set-up the environment
