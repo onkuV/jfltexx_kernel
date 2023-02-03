@@ -42,16 +42,18 @@ import os.path
 import shutil
 import sys
 import tarfile
+import errno
 
 version = 'build-all.py, version 0.01'
 
-build_dir = '../../output/all-kernels'
+build_dir = '../output/all-kernels'
 make_command = ["zImage", "modules"]
 make_env = os.environ
 pwd = os.environ.get("PWD")
 make_env.update({
         'ARCH': 'arm',
-        'CROSS_COMPILE': pwd + '/../prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-',
+        'CROSS_COMPILE': pwd + '../toolchain/bin/arm-linux-androideabi-',
+#        'CROSS_COMPILE': pwd + '/../prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-',
         'KCONFIG_NOTIMESTAMP': 'true' })
 all_options = {}
 
@@ -189,7 +191,7 @@ def build(target):
 
         if result == 0: 
  		os.rename(zImage_name, bootImage_name)
-		os.system('java -jar ../../buildscript/tools/signclient.jar -runtype ss_openssl_all -model %s -input %s -output %s' %(signing,bootImage_name,signedImage_name))
+		os.system('java -jar ../buildscript/tools/signclient.jar -runtype ss_openssl_all -model %s -input %s -output %s' %(signing,bootImage_name,signedImage_name))
 		tar = tarfile.open(tarball_name, "w")
 		tar.add(signedImage_name, arcname='boot.img')
 		tar.close()

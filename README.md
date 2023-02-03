@@ -73,7 +73,7 @@ git commit -m "New Kernel"
 ### Compiling!
 Finally, the compiling step!
 ```bash
-cd android_kernel_samsung_jf
+cd jfltexx_kernel
 make O=../kernel ARCH=arm -j$(nproc --all) LOCALVERSION="-OnkuV"
 ```
 Where `-j` define the numer of thread to use. the `$(nproc --all)` print the number of processing units available on the machine.
