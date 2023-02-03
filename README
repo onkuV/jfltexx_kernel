@@ -59,16 +59,7 @@ This will create the default .config file for variant jf_eur_defconfig
 ### Build the new kernel
 The last step: building the kernel!
 
-There are some little things to consider: the kernel name.
-
-~~ #### Warning suppression
-The source code have some implicit function declarations that trigger the compiler with some warning. In order to avoid this warning, edit the `Makefile` and comment out or remove the following line:
-```bash
-cd jfltexx_kernel
-nano Makefile
--Werror-implicit-function-declaration \
-``` ~~ 
-
+There are some little things to consider the kernel name.
 
 #### Kernel name
 The string that represent the kernel name (e.g. "Linux Name 3.4.112-gb6ef1a5f759-dirty #4 SMP PREEMPT Mon Sep 30 22:44:34 CEST 2022 armv7l") is generated automatically, based on some enviromental variables and must be *unique*. In particular, the alphanumeric string followed by ***-dirty*** is based on the git status of our repository.
