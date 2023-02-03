@@ -36,14 +36,14 @@ As described above we need to cross-compile. To do this we need to set-up some v
 ```bash
 export ARCH=arm
 export SUBARCH=arm
-export CROSS_COMPILE=$(pwd)/toolchain/bin/arm-eabi-
+export CROSS_COMPILE=$(pwd)/toolchain/bin/arm-linux-androideabi-
 ```
 You can view this variables with `export -p`.
 
 ## Configure the kernel
 To start the testual menu based on the config for the european version run this:
 ```bash
-cd android_kernel_samsung_jf
+cd jfltexx_kernel
 mkdir -p ../kernel # the output directory
 make O=../kernel clean # as a precaution
 make O=../kernel ARCH=arm VARIANT_DEFCONFIG=jf_eur_defconfig lineageos_jf_defconfig menuconfig
@@ -59,15 +59,15 @@ This will create the default .config file for variant jf_eur_defconfig
 ### Build the new kernel
 The last step: building the kernel!
 
-There are two little thing to consider: some warning suppression and the kernel name.
+There are some little things to consider: the kernel name.
 
-#### Warning suppression
+~~ #### Warning suppression
 The source code have some implicit function declarations that trigger the compiler with some warning. In order to avoid this warning, edit the `Makefile` and comment out or remove the following line:
 ```bash
-cd android_kernel_samsung_jf
+cd jfltexx_kernel
 nano Makefile
 -Werror-implicit-function-declaration \
-```
+``` ~~ 
 
 
 #### Kernel name
